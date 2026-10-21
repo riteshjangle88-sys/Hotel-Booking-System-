@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Secure Blockchain Hotel Booking{% endblock %}</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom Style -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+
+    <!-- NAV BAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-luxury">
+        <div class="container">
+            <a class="navbar-brand navbar-brand-luxury d-flex align-items-center" href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+                <span>VEDIC STAY</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-luxury {% if request.path == '/' %}active{% endif %}" href="{{ url_for('index') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-luxury {% if request.path == '/hotels' %}active{% endif %}" href="{{ url_for('hotels') }}">Explore Hotels</a>
+                    </li>
+                    {% if session.get('role') == 'admin' %}
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-luxury {% if '/admin/dashboard' in request.path %}active{% endif %}" href="{{ url_for('admin_dashboard') }}">Admin Panel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-luxury {% if '/admin/blockchain' in request.path %}active{% endif %}" href="{{ url_for('view_blockchain') }}">Blockchain Ledger</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-luxury {% if '/admin/bookings' in request.path %}active{% endif %}" href="{{ url_for('admin_bookings') }}">Manage Bookings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-luxury {% if '/admin/users' in request.path %}active{% endif %}" href="{{ url_for('admin_users') }}">Users</a>
+                    </li>
+                    {% elif session.get('user_id') %}
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-luxury {% if request.path == '/dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}">My Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-luxury {% if request.path == '/history' %}active{% endif %}" href="{{ url_for('history') }}">Booking History</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <div class="d-flex align-items-center">
+                    {% if session.get('user_id') %}
+                        <span class="text-light me-3"><i class="fa fa-user-circle text-warning me-1"></i> Hello, <strong>{{ session.get('name') }}</strong></span>
+                        <a href="{{ url_for('logout') }}" class="btn btn-outline-gold btn-sm"><i class="fa fa-sign-out-alt me-1"></i> Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-gold btn-sm me-2"><i class="fa fa-sign-in-alt me-1"></i> Login</a>
+                        <a href="{{ url_for('register') }}" class="btn btn-gold btn-sm"><i class="fa fa-user-plus me-1"></i> Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- FLASH MESSAGES -->
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show border-0 shadow-sm" role="alert">
+                        <div class="d-flex align-items-center">
+                            {% if category == 'error' or category == 'danger' %}
+                                <i class="fa fa-exclamation-circle text-danger me-2 fs-5"></i>
+                            {% elif category == 'success' %}
+                                <i class="fa fa-check-circle text-success me-2 fs-5"></i>
+                            {% else %}
+                                <i class="fa fa-info-circle text-info me-2 fs-5"></i>
+                            {% endif %}
+                            <div>{{ message }}</div>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer-luxury">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5 class="receipt-logo"><span class="text-warning">VEDIC</span> STAY</h5>
+                    <p class="text-muted mt-3" style="line-height: 1.8;">
+                        Vedic Stay is India's pioneer decentralised hotel booking environment. Powered by SHA-256 blockchain verification ledger nodes, we guarantee complete transaction integrity, preventing tampering and securing your reservations in stone.
+                    </p>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="{{ url_for('index') }}">Home</a></li>
+                        <li><a href="{{ url_for('hotels') }}">Explore Hotels</a></li>
+                        <li><a href="{{ url_for('login') }}">Member Login</a></li>
+                        <li><a href="{{ url_for('admin_login') }}">Admin Login</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Secured Booking</h5>
+                    <p class="text-muted mb-2">Every booking creates a unique SHA-256 block cryptographically linked to the previous transaction. Scan QR codes or download PDFs at any time to verify reservation logs.</p>
+                    <span class="badge bg-success border border-success"><i class="fa-solid fa-shield-halved me-1"></i> Blockchain Integrity Verified</span>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Contact Support</h5>
+                    <p class="text-muted mb-2"><i class="fa fa-envelope text-warning me-2"></i> support@vedicstay.in</p>
+                    <p class="text-muted mb-2"><i class="fa fa-phone text-warning me-2"></i> +91 1800 234 5678</p>
+                    <p class="text-muted mb-3"><i class="fa fa-map-marker-alt text-warning me-2"></i> Connaught Place, New Delhi, India</p>
+                    <div class="footer-social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="row footer-bottom">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="text-muted mb-0">&copy; 2026 Vedic Stay. All Rights Reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="text-muted mb-0">Designed & Secured via SHA-256 Blockchain Ledger.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- PDF Generator library (html2pdf.js) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <!-- QR Code Generator library (qrcode.js) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <!-- Chart.js for Admin Dashboard -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom Client Script -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

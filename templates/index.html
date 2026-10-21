@@ -1,0 +1,214 @@
+{% extends 'layout.html' %}
+
+{% block title %}Vedic Stay - Premium Blockchain Hotel Bookings{% endblock %}
+
+{% block content %}
+<!-- HERO BANNER -->
+<section class="hero-section">
+    <div class="container hero-content">
+        <span class="hero-subtitle">Decentralized &amp; Secure Ledger</span>
+        <h1 class="hero-title">Experience Divine Indian Hospitality</h1>
+        <p class="lead mb-4 text-light-50">Book premium heritage resorts, serene beach villas, and luxury palace hotels. Every reservation is verified and secured using SHA-256 blockchain database integrity technology.</p>
+        
+        <a href="{{ url_for('hotels') }}" class="btn btn-gold btn-lg me-3 mb-2"><i class="fa fa-search me-2"></i> Explore Hotels</a>
+        <a href="#about" class="btn btn-outline-gold btn-lg mb-2"><i class="fa fa-info-circle me-2"></i> Learn More</a>
+
+        <!-- QUICK SEARCH FORM OVERLAY -->
+        <div class="hero-search-container text-start">
+            <form action="{{ url_for('hotels') }}" method="GET" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label text-warning fw-semibold"><i class="fa fa-map-marker-alt me-1"></i> Destination City</label>
+                    <select name="city" class="form-select bg-dark text-white border-secondary">
+                        <option value="">All Indian Cities</option>
+                        {% for city in cities %}
+                            <option value="{{ city }}">{{ city }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label text-warning fw-semibold"><i class="fa fa-star me-1"></i> Minimum Rating</label>
+                    <select name="rating" class="form-select bg-dark text-white border-secondary">
+                        <option value="">Any Star Rating</option>
+                        <option value="4">4★ &amp; Above</option>
+                        <option value="5">5★ Only</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label text-warning fw-semibold"><i class="fa fa-sort me-1"></i> Sort By</label>
+                    <select name="sort_by" class="form-select bg-dark text-white border-secondary">
+                        <option value="">Sort Options</option>
+                        <option value="price_asc">Price: Low to High</option>
+                        <option value="price_desc">Price: High to Low</option>
+                        <option value="rating_desc">Rating: Highest First</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-gold w-100 py-2"><i class="fa fa-filter me-1"></i> Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- EXPLORE INDIA THEMATIC CATEGORIES -->
+<section class="section-padding">
+    <div class="container">
+        <div class="section-title-container">
+            <span class="section-subtitle">Explore India</span>
+            <h2 class="section-title">Curated Hotel Collections</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="card hotel-card border-0">
+                    <div class="hotel-card-img-container">
+                        <img src="{{ url_for('static', filename='images/hotel1.jpg') }}" class="hotel-card-img" alt="Heritage Palaces">
+                        <span class="hotel-badge">Royal Rajasthan</span>
+                    </div>
+                    <div class="card-body p-4 text-center">
+                        <h4 class="card-title">Heritage Palaces</h4>
+                        <p class="card-text text-muted">Relive the regal era of Maharaja dynasties. Experience grand hospitality in Udaipur, Jaipur, and Srinagar.</p>
+                        <a href="{{ url_for('hotels', search_query='Palace') }}" class="btn btn-outline-gold btn-sm mt-2">Browse Palaces</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card hotel-card border-0">
+                    <div class="hotel-card-img-container">
+                        <img src="{{ url_for('static', filename='images/hotel2.jpg') }}" class="hotel-card-img" alt="Beach Resorts">
+                        <span class="hotel-badge">Sunny Goa</span>
+                    </div>
+                    <div class="card-body p-4 text-center">
+                        <h4 class="card-title">Beach Resorts</h4>
+                        <p class="card-text text-muted">Unwind under the coconut palms along white sandy coastlines. Relaxing boutique wellness retreats in Goa &amp; Kochi.</p>
+                        <a href="{{ url_for('hotels', search_query='Goa') }}" class="btn btn-outline-gold btn-sm mt-2">Browse Resorts</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mx-auto">
+                <div class="card hotel-card border-0">
+                    <div class="hotel-card-img-container">
+                        <img src="{{ url_for('static', filename='images/hotel3.jpg') }}" class="hotel-card-img" alt="Hill Stations">
+                        <span class="hotel-badge">Mist &amp; Meadows</span>
+                    </div>
+                    <div class="card-body p-4 text-center">
+                        <h4 class="card-title">Hill Stations</h4>
+                        <p class="card-text text-muted">Breathe crisp mountain air amidst tea gardens and scenic valley overlooks in Ooty, Munnar, and Srinagar.</p>
+                        <a href="{{ url_for('hotels', search_query='Hill') }}" class="btn btn-outline-gold btn-sm mt-2">Browse Hill Stations</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURED HOTELS -->
+<section class="section-padding section-bg-cream">
+    <div class="container">
+        <div class="section-title-container">
+            <span class="section-subtitle">Exquisite Retreats</span>
+            <h2 class="section-title">Featured Luxury Stays</h2>
+        </div>
+        <div class="row g-4">
+            {% for hotel in featured_hotels %}
+            <div class="col-lg-3 col-md-6">
+                <div class="card hotel-card border-0">
+                    <div class="hotel-card-img-container">
+                        <img src="{{ url_for('static', filename=hotel.image) }}" class="hotel-card-img" alt="{{ hotel.hotel_name }}">
+                        <span class="hotel-badge">{{ hotel.rating }} ★</span>
+                    </div>
+                    <div class="card-body p-3">
+                        <span class="text-warning small fw-bold"><i class="fa fa-map-marker-alt"></i> {{ hotel.city }}, {{ hotel.state }}</span>
+                        <h5 class="card-title text-truncate mt-1" style="font-size: 1.15rem;">{{ hotel.hotel_name }}</h5>
+                        <p class="card-text text-muted small text-truncate">{{ hotel.description }}</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                            <span class="hotel-price">₹{{ hotel.price }} <span>/night</span></span>
+                            <a href="{{ url_for('booking_page', hotel_id=hotel.id) }}" class="btn btn-gold btn-sm">Book</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-5">
+            <a href="{{ url_for('hotels') }}" class="btn btn-outline-gold btn-lg"><i class="fa fa-list me-2"></i> View All Hotels</a>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section-padding">
+    <div class="container">
+        <div class="section-title-container">
+            <span class="section-subtitle">Customer Reviews</span>
+            <h2 class="section-title">What Our Guests Say</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm p-4 h-100 text-center bg-white">
+                    <div class="text-warning mb-3">
+                        <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                    </div>
+                    <p class="card-text italic text-muted">"Booking the Taj Mahal Palace on Vedic Stay was seamless. I love that my transaction can be audited on the blockchain dashboard. Totally transparent!"</p>
+                    <hr class="w-25 mx-auto text-warning">
+                    <h5 class="card-title small fw-bold text-dark mt-2">Aravind Swamy</h5>
+                    <span class="text-muted small">Chennai</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm p-4 h-100 text-center bg-white">
+                    <div class="text-warning mb-3">
+                        <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                    </div>
+                    <p class="card-text italic text-muted">"Best portal for Indian luxury hotels. The rooms prices are authentic, and when I downloaded my PDF invoice, the QR code let me verify my block details."</p>
+                    <hr class="w-25 mx-auto text-warning">
+                    <h5 class="card-title small fw-bold text-dark mt-2">Neha Kapoor</h5>
+                    <span class="text-muted small">Mumbai</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm p-4 h-100 text-center bg-white">
+                    <div class="text-warning mb-3">
+                        <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-alt"></i>
+                    </div>
+                    <p class="card-text italic text-muted">"Highly professional service! Vedic Stay's integrity checker is brilliant. I tested the admin tampering simulator and was amazed how it detected database hacks."</p>
+                    <hr class="w-25 mx-auto text-warning">
+                    <h5 class="card-title small fw-bold text-dark mt-2">Vikram Malhotra</h5>
+                    <span class="text-muted small">New Delhi</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ABOUT SECTION -->
+<section id="about" class="section-padding section-bg-cream">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <img src="{{ url_for('static', filename='images/banner.jpg') }}" alt="Blockchain Technology" class="img-fluid rounded-4 shadow-lg border border-3 border-warning">
+            </div>
+            <div class="col-lg-6 ps-lg-5">
+                <span class="section-subtitle text-start d-block mb-1">Our Technology</span>
+                <h2 class="display-font text-primary-blue mb-4">Why Blockchain Bookings?</h2>
+                <p class="text-muted mb-4" style="line-height: 1.8;">
+                    Traditional reservation websites store bookings in centralized SQL databases. This leaves room for administrative errors, manual edits, double-booking, or hacking. 
+                </p>
+                <div class="d-flex align-items-start mb-3">
+                    <span class="badge bg-warning p-2 me-3"><i class="fa fa-lock text-dark"></i></span>
+                    <div>
+                        <h5 class="text-primary-blue fw-semibold">Tamper-Proof Ledger</h5>
+                        <p class="text-muted small">Every booking generates an immutable cryptographic block containing key details and the previous block hash. If a row is modified directly in the database, the chain breaks, and alerts are flagged immediately.</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-start mb-3">
+                    <span class="badge bg-warning p-2 me-3"><i class="fa fa-qrcode text-dark"></i></span>
+                    <div>
+                        <h5 class="text-primary-blue fw-semibold">Verifiable QR Code Invoices</h5>
+                        <p class="text-muted small">Each receipt includes a unique QR code representing the transaction hash. Instantly verifiable using standard scanners to ensure authenticity.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

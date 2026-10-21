@@ -1,0 +1,149 @@
+{% extends 'layout.html' %}
+
+{% block title %}Book {{ hotel.hotel_name }} - Vedic Stay{% endblock %}
+
+{% block content %}
+<section class="section-padding bg-light">
+    <div class="container">
+        
+        <!-- BACK BUTTON -->
+        <div class="mb-4">
+            <a href="{{ url_for('hotels') }}" class="text-primary-blue fw-semibold text-decoration-none"><i class="fa fa-arrow-left me-2"></i> Back to Hotels</a>
+        </div>
+
+        <div class="row g-4">
+            
+            <!-- HOTEL DETAILS COLUMN (Col 7) -->
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 12px;">
+                    <!-- Primary Hotel Image -->
+                    <div class="overflow-hidden rounded-3 mb-4" style="height: 380px;">
+                        <img src="{{ url_for('static', filename=hotel.image) }}" class="w-100 h-100 object-fit-cover" alt="{{ hotel.hotel_name }}">
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h2 class="text-primary-blue display-font mb-2">{{ hotel.hotel_name }}</h2>
+                            <p class="text-muted"><i class="fa fa-map-marker-alt text-warning me-2"></i>{{ hotel.address }}</p>
+                        </div>
+                        <div class="text-end">
+                            <span class="fs-4 text-warning fw-bold">{{ hotel.rating }} ★</span>
+                            <span class="d-block text-muted small">Guest Rating</span>
+                        </div>
+                    </div>
+
+                    <!-- Amenities Icons -->
+                    <div class="border-top border-bottom py-3 my-3">
+                        <h6 class="text-uppercase small fw-bold text-muted mb-3">Key Amenities</h6>
+                        <div class="d-flex flex-wrap gap-3">
+                            {% for amenity in hotel.amenities.split(',') %}
+                                <span class="badge bg-light text-dark border p-2 fw-medium"><i class="fa fa-check text-success me-2"></i>{{ amenity.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <h5 class="text-primary-blue mt-4">Description</h5>
+                    <p class="text-muted" style="line-height: 1.8;">{{ hotel.description }}</p>
+
+                    <!-- Contact Details -->
+                    <div class="bg-light p-3 rounded-3 mt-4 d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="text-muted small d-block">Reservation Hotline</span>
+                            <strong>{{ hotel.contact_number }}</strong>
+                        </div>
+                        {% if hotel.maps_link %}
+                            <a href="{{ hotel.maps_link }}" target="_blank" class="btn btn-outline-gold btn-sm"><i class="fa fa-map-marked-alt me-1"></i> Open Google Maps</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Gallery Images -->
+                {% if hotel.gallery %}
+                    <h5 class="text-primary-blue mb-3">Photo Gallery</h5>
+                    <div class="row g-3">
+                        {% for gallery_img in hotel.gallery.split(',') %}
+                            <div class="col-4">
+                                <div class="overflow-hidden rounded-3" style="height: 120px;">
+                                    <img src="{{ url_for('static', filename=gallery_img.strip()) }}" class="w-100 h-100 object-fit-cover" alt="Gallery Photo">
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- BOOKING SUMMARY SIDEBAR (Col 5) -->
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm p-4 border-top border-5 border-warning" style="border-radius: 12px; position: sticky; top: 30px;">
+                    <h4 class="text-primary-blue mb-4 display-font">Book Your Reservation</h4>
+                    
+                    <form action="{{ url_for('booking_page', hotel_id=hotel.id) }}" method="POST" id="booking-form">
+                        
+                        <!-- Room Type Selection -->
+                        <div class="mb-3">
+                            <label for="room_type" class="form-label fw-bold">Select Room Type</label>
+                            <select id="room_type" name="room_type" class="form-select border-secondary py-2" required>
+                                <option value="Standard Room" data-multiplier="1.0">Standard Room (₹{{ hotel.price }} / night)</option>
+                                <option value="Deluxe Room" data-multiplier="1.5">Deluxe Room (₹{{ (hotel.price * 1.5)|round|int }} / night)</option>
+                                <option value="Luxury Room" data-multiplier="2.2">Luxury Room (₹{{ (hotel.price * 2.2)|round|int }} / night)</option>
+                                <option value="Suite" data-multiplier="3.5">Suite (₹{{ (hotel.price * 3.5)|round|int }} / night)</option>
+                            </select>
+                        </div>
+
+                        <!-- Date Inputs -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <label for="checkin" class="form-label fw-bold">Check-in</label>
+                                <input type="date" class="form-control border-secondary" id="checkin" name="checkin" required>
+                            </div>
+                            <div class="col-6">
+                                <label for="checkout" class="form-label fw-bold">Check-out</label>
+                                <input type="date" class="form-control border-secondary" id="checkout" name="checkout" required>
+                            </div>
+                        </div>
+
+                        <!-- Guest Selector -->
+                        <div class="mb-4">
+                            <label for="guests" class="form-label fw-bold">Guests Count</label>
+                            <select id="guests" name="guests" class="form-select border-secondary" required>
+                                <option value="1">1 Guest</option>
+                                <option value="2">2 Guests</option>
+                                <option value="3">3 Guests</option>
+                                <option value="4">4 Guests</option>
+                            </select>
+                        </div>
+
+                        <!-- Hidden Pricing Fields -->
+                        <input type="hidden" name="amount" id="total_amount_input" value="{{ hotel.price }}">
+
+                        <!-- LIVE PRICING CALCULATOR PANEL -->
+                        <div class="bg-cream border p-3 rounded-3 mb-4">
+                            <h6 class="text-uppercase small fw-bold text-muted mb-3 border-bottom pb-2">Price Breakdown</h6>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Base Rate (Standard):</span>
+                                <strong id="base_price_display" data-price="{{ hotel.price }}">₹{{ hotel.price }}</strong>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Total Nights:</span>
+                                <strong id="total_nights_display">0</strong>
+                            </div>
+                            <div class="d-flex justify-content-between border-top pt-2 mt-2">
+                                <span class="text-primary-blue fw-bold">Estimated Cost (INR):</span>
+                                <span class="fs-4 text-primary-blue fw-bold" id="total_amount_display">₹{{ hotel.price }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Warnings & Submission -->
+                        <div class="text-center">
+                            <p class="text-muted small mb-3"><i class="fa fa-shield-alt text-success me-1"></i> Safe checkout, booking is written as a block to the immutable ledger on payment approval.</p>
+                            <button type="submit" class="btn btn-gold btn-lg w-100 py-3"><i class="fa fa-credit-card me-2"></i> Confirm Reservation</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+{% endblock %}

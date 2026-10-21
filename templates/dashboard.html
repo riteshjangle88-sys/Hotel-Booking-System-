@@ -1,0 +1,144 @@
+{% extends 'layout.html' %}
+
+{% block title %}My Dashboard - Vedic Stay{% endblock %}
+
+{% block content %}
+<section class="section-padding bg-light">
+    <div class="container">
+        
+        <!-- PROFILE SUMMARY BANNER -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                    <div class="card-body p-5 bg-dark text-white d-md-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center mb-3 mb-md-0">
+                            <div class="bg-warning rounded-circle d-flex align-items-center justify-content-center text-dark" style="width: 70px; height: 70px;">
+                                <i class="fa fa-user fs-1"></i>
+                            </div>
+                            <div class="ms-4">
+                                <h3 class="mb-1 display-font text-warning">{{ name }}</h3>
+                                <p class="mb-0 text-white-50"><i class="fa fa-envelope me-2"></i>{{ email }}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <a href="{{ url_for('hotels') }}" class="btn btn-gold"><i class="fa fa-plus me-1"></i> Book New Hotel</a>
+                            <a href="{{ url_for('history') }}" class="btn btn-outline-light ms-2"><i class="fa fa-history me-1"></i> History</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUICK KPI STATS -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card dashboard-card kpi-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="kpi-title">Total Bookings</div>
+                            <div class="kpi-value">{{ total_bookings }}</div>
+                        </div>
+                        <div class="text-primary fs-1 opacity-50"><i class="fa fa-book"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card dashboard-card kpi-card" style="border-left-color: #28a745;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="kpi-title">Active / Confirmed</div>
+                            <div class="kpi-value text-success">{{ active_bookings }}</div>
+                        </div>
+                        <div class="text-success fs-1 opacity-50"><i class="fa fa-check-circle"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card dashboard-card kpi-card" style="border-left-color: #dc3545;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="kpi-title">Cancelled</div>
+                            <div class="kpi-value text-danger">{{ cancelled_bookings }}</div>
+                        </div>
+                        <div class="text-danger fs-1 opacity-50"><i class="fa fa-times-circle"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RECENT BOOKINGS -->
+        <div class="row">
+            <div class="col-12">
+                <h4 class="mb-4 text-primary-blue"><i class="fa fa-calendar-check me-2"></i>Current &amp; Upcoming Reservations</h4>
+                
+                {% if bookings %}
+                    <div class="row g-4">
+                        {% for booking in bookings %}
+                            {% if booking.status != 'Cancelled' %}
+                                <div class="col-lg-6">
+                                    <div class="card border-0 shadow-sm overflow-hidden h-100" style="border-radius: 12px;">
+                                        <div class="row g-0 h-100">
+                                            <div class="col-md-4">
+                                                <img src="{{ url_for('static', filename=booking.image) }}" class="img-fluid h-100 w-100 object-fit-cover" alt="Hotel image" style="min-height: 180px;">
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="card-body p-4 d-flex flex-column justify-content-between h-100">
+                                                    <div>
+                                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                                            <span class="badge bg-success"><i class="fa fa-check-circle me-1"></i> {{ booking.status }}</span>
+                                                            <span class="text-muted small font-monospace">{{ booking.booking_uid }}</span>
+                                                        </div>
+                                                        <h5 class="card-title text-primary-blue">{{ booking.hotel_name }}</h5>
+                                                        <p class="text-muted small mb-3"><i class="fa fa-map-marker-alt me-1 text-warning"></i> {{ booking.city }}</p>
+                                                        
+                                                        <div class="row g-2 small border-top pt-2 mt-2 mb-3">
+                                                            <div class="col-6">
+                                                                <span class="text-muted d-block">Check-in:</span>
+                                                                <strong class="text-dark">{{ booking.checkin }}</strong>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <span class="text-muted d-block">Check-out:</span>
+                                                                <strong class="text-dark">{{ booking.checkout }}</strong>
+                                                            </div>
+                                                            <div class="col-6 mt-2">
+                                                                <span class="text-muted d-block">Room:</span>
+                                                                <strong class="text-dark">{{ booking.room_type }}</strong>
+                                                            </div>
+                                                            <div class="col-6 mt-2">
+                                                                <span class="text-muted d-block">Guests:</span>
+                                                                <strong class="text-dark">{{ booking.guests }} Guest(s)</strong>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                                        <span class="fw-bold fs-5 text-dark">₹{{ booking.amount }}</span>
+                                                        <div>
+                                                            <a href="{{ url_for('history') }}#receipt-{{ booking.id }}" class="btn btn-gold btn-sm"><i class="fa fa-file-invoice me-1"></i> Invoice</a>
+                                                            <a href="{{ url_for('cancel_booking_route', booking_id=booking.id) }}" class="btn btn-outline-danger btn-sm ms-1 confirm-delete" data-message="Are you sure you want to cancel this booking? This will restore the room to inventory."><i class="fa fa-ban"></i> Cancel</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="card p-5 border-0 shadow-sm text-center bg-white" style="border-radius: 12px;">
+                        <i class="fa fa-calendar-times text-muted fs-1 mb-3"></i>
+                        <h5 class="text-muted">No active reservations found.</h5>
+                        <p class="text-muted small">Ready to plan your next journey? Browse our luxury collection across India.</p>
+                        <div class="mt-3">
+                            <a href="{{ url_for('hotels') }}" class="btn btn-gold"><i class="fa fa-search me-1"></i> Search Hotels</a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

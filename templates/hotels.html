@@ -1,0 +1,140 @@
+{% extends 'layout.html' %}
+
+{% block title %}Explore Hotels - Vedic Stay{% endblock %}
+
+{% block content %}
+<section class="section-padding bg-light">
+    <div class="container">
+        
+        <div class="section-title-container">
+            <span class="section-subtitle">Luxury Collections</span>
+            <h2 class="section-title">Explore Sacred Stays</h2>
+        </div>
+
+        <div class="row g-4">
+            
+            <!-- SIDEBAR FILTERS (Col 3) -->
+            <div class="col-lg-3">
+                <div class="card border-0 shadow-sm p-4" style="border-radius: 12px; position: sticky; top: 30px;">
+                    <h5 class="mb-4 text-primary-blue pb-2 border-bottom"><i class="fa fa-sliders-h me-2 text-warning"></i>Filter Results</h5>
+                    
+                    <form action="{{ url_for('hotels') }}" method="GET">
+                        <!-- Search Box -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Search Keywords</label>
+                            <div class="input-group">
+                                <input type="text" name="search_query" class="form-control" placeholder="Hotel name or desc..." value="{{ request.args.get('search_query', '') }}">
+                                <span class="input-group-text bg-white"><i class="fa fa-search text-muted"></i></span>
+                            </div>
+                        </div>
+
+                        <!-- City Filter -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Destination City</label>
+                            <select name="city" class="form-select">
+                                <option value="">All Cities</option>
+                                {% for city in cities %}
+                                    <option value="{{ city }}" {% if request.args.get('city') == city %}selected{% endif %}>{{ city }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Rating Filter -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Star Rating</label>
+                            <select name="rating" class="form-select">
+                                <option value="">Any Star Rating</option>
+                                <option value="4" {% if request.args.get('rating') == '4' %}selected{% endif %}>4★ &amp; Above</option>
+                                <option value="5" {% if request.args.get('rating') == '5' %}selected{% endif %}>5★ Only</option>
+                            </select>
+                        </div>
+
+                        <!-- Price Ranges -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Price Range (₹)</label>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <input type="number" name="min_price" class="form-control" placeholder="Min" value="{{ request.args.get('min_price', '') }}">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" name="max_price" class="form-control" placeholder="Max" value="{{ request.args.get('max_price', '') }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sorting Option -->
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold">Sort Results By</label>
+                            <select name="sort_by" class="form-select">
+                                <option value="">Default sorting</option>
+                                <option value="price_asc" {% if request.args.get('sort_by') == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                                <option value="price_desc" {% if request.args.get('sort_by') == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                                <option value="rating_desc" {% if request.args.get('sort_by') == 'rating_desc' %}selected{% endif %}>Rating: Highest First</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-gold w-100 mb-2"><i class="fa fa-filter me-1"></i> Apply Filters</button>
+                        <a href="{{ url_for('hotels') }}" class="btn btn-outline-secondary w-100 btn-sm"><i class="fa fa-sync-alt me-1"></i> Reset Filters</a>
+                    </form>
+                </div>
+            </div>
+
+            <!-- HOTELS GRID (Col 9) -->
+            <div class="col-lg-9">
+                {% if hotels %}
+                    <div class="row g-4">
+                        {% for hotel in hotels %}
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card hotel-card border-0">
+                                    <div class="hotel-card-img-container">
+                                        <img src="{{ url_for('static', filename=hotel.image) }}" class="hotel-card-img" alt="{{ hotel.hotel_name }}">
+                                        <span class="hotel-badge">{{ hotel.rating }} ★</span>
+                                    </div>
+                                    <div class="card-body p-3 d-flex flex-column justify-content-between">
+                                        <div>
+                                            <span class="text-warning small fw-bold"><i class="fa fa-map-marker-alt"></i> {{ hotel.city }}, {{ hotel.state }}</span>
+                                            <h5 class="card-title text-truncate mt-1 mb-2" style="font-size: 1.15rem;">{{ hotel.hotel_name }}</h5>
+                                            <p class="card-text text-muted small mb-3" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; height: 3.6rem; line-height: 1.2rem;">
+                                                {{ hotel.description }}
+                                            </p>
+                                            
+                                            <!-- Room details / inventory -->
+                                            <div class="mb-3">
+                                                {% if hotel.rooms > 0 %}
+                                                    <span class="badge bg-success-subtle text-success border border-success"><i class="fa fa-door-open me-1"></i> {{ hotel.rooms }} Rooms Available</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger-subtle text-danger border border-danger"><i class="fa fa-door-closed me-1"></i> Sold Out</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                            <span class="hotel-price">₹{{ hotel.price }} <span>/night</span></span>
+                                            {% if hotel.rooms > 0 %}
+                                                <a href="{{ url_for('booking_page', hotel_id=hotel.id) }}" class="btn btn-gold btn-sm"><i class="fa fa-calendar-check me-1"></i> Book</a>
+                                            {% else %}
+                                                <button class="btn btn-secondary btn-sm" disabled><i class="fa fa-ban me-1"></i> Sold Out</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="card p-5 border-0 shadow-sm text-center bg-white" style="border-radius: 12px;">
+                        <i class="fa fa-hotel text-muted fs-1 mb-3"></i>
+                        <h5 class="text-muted">No hotels match your filters.</h5>
+                        <p class="text-muted small">Try broadening your search keywords or choosing a different city.</p>
+                        <div class="mt-3">
+                            <a href="{{ url_for('hotels') }}" class="btn btn-gold"><i class="fa fa-sync me-1"></i> View All Hotels</a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+
+    </div>
+</section>
+{% endblock %}

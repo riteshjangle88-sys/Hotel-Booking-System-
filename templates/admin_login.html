@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}
+
+{% block title %}Admin Login - Vedic Stay{% endblock %}
+
+{% block content %}
+<section class="auth-bg">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-8">
+                <div class="glass-card" style="border-top: 5px solid var(--saffron);">
+                    <div class="text-center mb-4">
+                        <div class="bg-warning-subtle d-inline-flex p-3 rounded-circle text-warning mb-3">
+                            <i class="fa fa-user-shield fs-1"></i>
+                        </div>
+                        <h2 class="text-primary-blue display-font">Admin Portal Access</h2>
+                        <p class="text-muted small">Access dashboard statistics, manage bookings, add hotels, and audit the SHA-256 blockchain chain structure.</p>
+                    </div>
+                    
+                    <form action="{{ url_for('admin_login') }}" method="POST">
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-semibold">Admin Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white"><i class="fa fa-envelope-open text-muted"></i></span>
+                                <input type="email" class="form-control border-start-0" id="email" name="email" placeholder="admin@hotelchain.in" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="password" class="form-label fw-semibold">Access Key</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white"><i class="fa fa-key text-muted"></i></span>
+                                <input type="password" class="form-control border-start-0" id="password" name="password" placeholder="••••••••" required>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-saffron w-100 py-3 mb-3"><i class="fa fa-shield-alt me-1"></i> Authenticate Admin</button>
+                        
+                        <div class="text-center">
+                            <span class="text-muted small"><a href="{{ url_for('login') }}" class="text-primary fw-semibold"><i class="fa fa-arrow-left me-1"></i> Standard Member Login</a></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

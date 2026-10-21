@@ -1,0 +1,233 @@
+{% extends 'layout.html' %}
+
+{% block title %}Admin Dashboard - Vedic Stay{% endblock %}
+
+{% block content %}
+<section class="section-padding bg-light">
+    <div class="container">
+        
+        <!-- DASHBOARD HEADER -->
+        <div class="row align-items-center mb-5">
+            <div class="col-md-6 mb-3 mb-md-0">
+                <h2 class="text-primary-blue display-font mb-1">Administrative Dashboard</h2>
+                <p class="text-muted mb-0">System metrics, hotel inventory controls, and cryptographic chain status.</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <!-- Blockchain Health status -->
+                {% if chain_healthy %}
+                    <span class="badge bg-success-subtle text-success border border-success p-3 fs-6 rounded-pill">
+                        <i class="fa fa-shield-halved me-1"></i> Blockchain Integrity: <strong>HEALTHY</strong>
+                    </span>
+                {% else %}
+                    <span class="badge bg-danger-subtle text-danger border border-danger p-3 fs-6 rounded-pill">
+                        <i class="fa fa-triangle-exclamation me-1"></i> Blockchain Integrity: <strong>ALERT TAMPERED</strong>
+                    </span>
+                {% endif %}
+                <a href="{{ url_for('view_blockchain') }}" class="btn btn-saffron btn-sm ms-2"><i class="fa fa-blockchain"></i> Audit Chain</a>
+            </div>
+        </div>
+
+        <!-- STATS KPI CARDROW -->
+        <div class="row mb-5">
+            <div class="col-lg-3 col-md-6">
+                <div class="card dashboard-card kpi-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="kpi-title">Gross Revenue</div>
+                            <div class="kpi-value">₹{{ total_revenue|int }}</div>
+                        </div>
+                        <div class="text-success fs-1 opacity-50"><i class="fa fa-wallet"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card dashboard-card kpi-card" style="border-left-color: #0d6efd;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="kpi-title">Total Bookings</div>
+                            <div class="kpi-value text-primary">{{ total_bookings }}</div>
+                        </div>
+                        <div class="text-primary fs-1 opacity-50"><i class="fa fa-calendar-check"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card dashboard-card kpi-card" style="border-left-color: #ff9933;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="kpi-title">Active Hotels</div>
+                            <div class="kpi-value text-warning">{{ total_hotels }}</div>
+                        </div>
+                        <div class="text-warning fs-1 opacity-50"><i class="fa fa-hotel"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card dashboard-card kpi-card" style="border-left-color: #6f42c1;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="kpi-title">System Users</div>
+                            <div class="kpi-value text-purple">{{ total_users }}</div>
+                        </div>
+                        <div class="text-purple fs-1 opacity-50"><i class="fa fa-users"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHARTS SECTION -->
+        <div class="row mb-5">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 12px;">
+                    <h5 class="text-primary-blue mb-4 fw-bold"><i class="fa fa-chart-bar me-2"></i> Bookings Rate per Hotel</h5>
+                    <canvas id="hotelChart" height="260"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 12px;">
+                    <h5 class="text-primary-blue mb-4 fw-bold"><i class="fa fa-chart-pie me-2"></i> Revenue by City</h5>
+                    <canvas id="cityChart" height="260"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUICK ACTIONS BAR -->
+        <div class="card border-0 shadow-sm p-4 mb-5 bg-dark text-white" style="border-radius: 12px;">
+            <h5 class="text-warning mb-3 fw-bold"><i class="fa fa-tools me-2"></i>Quick Administration Controls</h5>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{{ url_for('add_hotel') }}" class="btn btn-gold"><i class="fa fa-plus-circle me-1"></i> Add New Hotel</a>
+                <a href="{{ url_for('admin_bookings') }}" class="btn btn-outline-light"><i class="fa fa-tasks me-1"></i> Manage Bookings</a>
+                <a href="{{ url_for('admin_users') }}" class="btn btn-outline-light"><i class="fa fa-users-cog me-1"></i> Manage Users</a>
+                <a href="{{ url_for('view_blockchain') }}" class="btn btn-saffron"><i class="fa fa-shield-halved me-1"></i> View Blockchain Explorer</a>
+            </div>
+        </div>
+
+        <!-- HOTELS INVENTORY LISTING -->
+        <div class="row">
+            <div class="col-12">
+                <h4 class="text-primary-blue mb-4"><i class="fa fa-warehouse me-2"></i>Manage Hotel Catalog Inventory</h4>
+                <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 12px;">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th scope="col" style="padding-left: 20px;">Hotel Details</th>
+                                    <th scope="col">Location</th>
+                                    <th scope="col">Rating</th>
+                                    <th scope="col">Price / Night</th>
+                                    <th scope="col">Rooms Inventory</th>
+                                    <th scope="col" class="text-end" style="padding-right: 20px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for hotel in hotels %}
+                                <tr>
+                                    <td style="padding-left: 20px;">
+                                        <div class="d-flex align-items-center">
+                                            <img src="{{ url_for('static', filename=hotel.image) }}" alt="hotel" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                                            <div class="ms-3">
+                                                <h6 class="mb-0 fw-bold text-dark">{{ hotel.hotel_name }}</h6>
+                                                <span class="text-muted small">ID: {{ hotel.id }}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ hotel.city }}, {{ hotel.state }}</td>
+                                    <td><span class="text-warning fw-bold">{{ hotel.rating }} ★</span></td>
+                                    <td class="fw-bold text-primary-blue">₹{{ hotel.price }}</td>
+                                    <td>
+                                        {% if hotel.rooms > 0 %}
+                                            <span class="badge bg-success-subtle text-success">{{ hotel.rooms }} Left</span>
+                                        {% else %}
+                                            <span class="badge bg-danger-subtle text-danger">Sold Out</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end" style="padding-right: 20px;">
+                                        <a href="{{ url_for('edit_hotel', hotel_id=hotel.id) }}" class="btn btn-outline-primary btn-sm me-1"><i class="fa fa-edit"></i> Edit</a>
+                                        <a href="{{ url_for('delete_hotel_route', hotel_id=hotel.id) }}" class="btn btn-outline-danger btn-sm confirm-delete" data-message="Are you sure you want to delete this hotel? All inventory listing records will be removed."><i class="fa fa-trash"></i> Delete</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- CHART DRAWING SCRIPT -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // 1. Hotel Bookings Bar Chart
+    const ctxHotel = document.getElementById('hotelChart').getContext('2d');
+    
+    // Process labels and data from server template variables
+    const hotelLabels = [{% for hotel in hotels_bookings_data %}"{{ hotel.name }}",{% endfor %}];
+    const hotelData = [{% for hotel in hotels_bookings_data %}{{ hotel.count }},{% endfor %}];
+    
+    new Chart(ctxHotel, {
+        type: 'bar',
+        data: {
+            labels: hotelLabels,
+            datasets: [{
+                label: 'Number of Bookings',
+                data: hotelData,
+                backgroundColor: 'rgba(10, 25, 47, 0.8)',
+                borderColor: '#d4af37',
+                borderWidth: 2,
+                borderRadius: 5,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+
+    // 2. Revenue by City Pie Chart
+    const ctxCity = document.getElementById('cityChart').getContext('2d');
+    
+    const cityLabels = [{% for city in city_revenue_data %}"{{ city.city }}",{% endfor %}];
+    const cityData = [{% for city in city_revenue_data %}{{ city.revenue }},{% endfor %}];
+    
+    new Chart(ctxCity, {
+        type: 'pie',
+        data: {
+            labels: cityLabels,
+            datasets: [{
+                data: cityData,
+                backgroundColor: [
+                    '#0a192f',
+                    '#d4af37',
+                    '#ff9933',
+                    '#20c997',
+                    '#0d6efd',
+                    '#6f42c1',
+                    '#fd7e14'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

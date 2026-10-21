@@ -1,0 +1,577 @@
+/* 
+   Luxury Indian Hotel Theme Stylesheet
+   Color Palette:
+   - Deep Royal Blue (Primary Dark): #0a192f
+   - Midnight Navy: #172a45
+   - Antique Gold (Secondary Accent): #d4af37
+   - Muted Gold: #b89020
+   - Indian Saffron Accent: #ff9933
+   - Rich Cream / Soft Gold: #fdfaf2
+   - Clean White: #ffffff
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+:root {
+    --primary-blue: #0a192f;
+    --navy-dark: #172a45;
+    --gold: #d4af37;
+    --gold-hover: #b89020;
+    --saffron: #ff9933;
+    --cream: #fdfaf2;
+    --text-dark: #2c3e50;
+    --text-light: #f8f9fa;
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-sans: 'Montserrat', sans-serif;
+    --shadow-premium: 0 10px 30px rgba(10, 25, 47, 0.08);
+    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+body {
+    font-family: var(--font-sans);
+    color: var(--text-dark);
+    background-color: #f8f9fa;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6, .display-font {
+    font-family: var(--font-serif);
+    font-weight: 700;
+}
+
+/* --- NAVIGATION --- */
+.navbar-luxury {
+    background-color: var(--primary-blue) !important;
+    border-bottom: 3px solid var(--gold);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    padding: 15px 0;
+}
+
+.navbar-brand-luxury {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gold) !important;
+    letter-spacing: 1px;
+}
+
+.navbar-brand-luxury img {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+.nav-link-luxury {
+    color: var(--text-light) !important;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 0 10px;
+    position: relative;
+    transition: var(--transition-smooth);
+}
+
+.nav-link-luxury:hover, .nav-link-luxury.active {
+    color: var(--gold) !important;
+}
+
+.nav-link-luxury::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: var(--gold);
+    transition: var(--transition-smooth);
+}
+
+.nav-link-luxury:hover::after, .nav-link-luxury.active::after {
+    width: 100%;
+}
+
+/* --- HERO BANNER --- */
+.hero-section {
+    position: relative;
+    height: 80vh;
+    background: linear-gradient(rgba(10, 25, 47, 0.65), rgba(10, 25, 47, 0.85)), url('../images/hero.jpg') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-light);
+    border-bottom: 5px solid var(--gold);
+}
+
+.hero-content {
+    text-align: center;
+    max-width: 900px;
+    padding: 20px;
+}
+
+.hero-subtitle {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--gold);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    animation: fadeInUp 1s ease-out;
+}
+
+.hero-title {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    line-height: 1.2;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    animation: fadeInUp 1.2s ease-out;
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+}
+
+.hero-search-container {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    margin-top: 30px;
+    animation: fadeInUp 1.4s ease-out;
+}
+
+/* --- BUTTONS --- */
+.btn-gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold-hover));
+    color: var(--primary-blue) !important;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 5px;
+    transition: var(--transition-smooth);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.btn-gold:hover {
+    background: linear-gradient(135deg, var(--gold-hover), var(--gold));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+}
+
+.btn-outline-gold {
+    border: 2px solid var(--gold);
+    color: var(--gold) !important;
+    background: transparent;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 10px 28px;
+    border-radius: 5px;
+    transition: var(--transition-smooth);
+}
+
+.btn-outline-gold:hover {
+    background-color: var(--gold);
+    color: var(--primary-blue) !important;
+    transform: translateY(-2px);
+}
+
+.btn-saffron {
+    background: linear-gradient(135deg, var(--saffron), #e67e22);
+    color: white !important;
+    font-weight: 600;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 5px;
+    transition: var(--transition-smooth);
+}
+
+.btn-saffron:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 153, 51, 0.4);
+}
+
+/* --- SECTION GENERAL --- */
+.section-padding {
+    padding: 80px 0;
+}
+
+.section-bg-cream {
+    background-color: var(--cream);
+}
+
+.section-title-container {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-subtitle {
+    color: var(--saffron);
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    color: var(--primary-blue);
+    position: relative;
+    display: inline-block;
+    padding-bottom: 15px;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 3px;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--gold);
+}
+
+/* --- CARDS & HOTEL LIST --- */
+.hotel-card {
+    background-color: var(--text-light);
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-premium);
+    transition: var(--transition-smooth);
+    height: 100%;
+}
+
+.hotel-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(10, 25, 47, 0.15);
+}
+
+.hotel-card-img-container {
+    position: relative;
+    height: 240px;
+    overflow: hidden;
+}
+
+.hotel-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-smooth);
+}
+
+.hotel-card:hover .hotel-card-img {
+    transform: scale(1.08);
+}
+
+.hotel-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(10, 25, 47, 0.8);
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    backdrop-filter: blur(5px);
+}
+
+.hotel-rating {
+    color: #ffc107;
+    font-size: 0.9rem;
+}
+
+.hotel-price {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+}
+
+.hotel-price span {
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-weight: 400;
+}
+
+/* --- FOOTER --- */
+.footer-luxury {
+    background-color: var(--primary-blue);
+    color: var(--text-light);
+    border-top: 5px solid var(--gold);
+    padding: 60px 0 30px;
+    font-size: 0.9rem;
+}
+
+.footer-luxury h5 {
+    color: var(--gold);
+    margin-bottom: 25px;
+    font-size: 1.25rem;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li {
+    margin-bottom: 12px;
+}
+
+.footer-links a {
+    color: #a8b2d1;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+}
+
+.footer-links a:hover {
+    color: var(--gold);
+    padding-left: 5px;
+}
+
+.footer-social-icons a {
+    color: var(--text-light);
+    font-size: 1.2rem;
+    margin-right: 15px;
+    transition: var(--transition-smooth);
+}
+
+.footer-social-icons a:hover {
+    color: var(--gold);
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 25px;
+    margin-top: 40px;
+}
+
+/* --- AUTH PAGES & GLASSMORPHISM --- */
+.glass-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+    padding: 40px;
+}
+
+.auth-bg {
+    background: linear-gradient(rgba(10, 25, 47, 0.8), rgba(10, 25, 47, 0.8)), url('../images/banner.jpg') no-repeat center center;
+    background-size: cover;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+}
+
+/* --- DASHBOARD ELEMENTS --- */
+.dashboard-card {
+    background-color: white;
+    border-radius: 12px;
+    border: none;
+    box-shadow: var(--shadow-premium);
+    padding: 25px;
+    margin-bottom: 30px;
+    transition: var(--transition-smooth);
+}
+
+.dashboard-card:hover {
+    transform: translateY(-3px);
+}
+
+.kpi-card {
+    border-left: 4px solid var(--gold);
+}
+
+.kpi-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #6c757d;
+    margin-bottom: 5px;
+}
+
+.kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+}
+
+/* --- BLOCKCHAIN TIMELINE EXPLORER --- */
+.blockchain-container {
+    padding: 30px 10px;
+    position: relative;
+}
+
+.blockchain-timeline {
+    position: relative;
+    width: 100%;
+}
+
+.blockchain-block-card {
+    background: white;
+    border-radius: 12px;
+    border: 2px solid var(--navy-dark);
+    margin-bottom: 30px;
+    box-shadow: var(--shadow-premium);
+    position: relative;
+    transition: var(--transition-smooth);
+}
+
+.blockchain-block-card.genesis {
+    border-color: var(--gold);
+    background-color: var(--cream);
+}
+
+.blockchain-block-card.tampered {
+    border-color: #dc3545 !important;
+    box-shadow: 0 10px 30px rgba(220, 53, 69, 0.2);
+}
+
+.blockchain-block-card.valid {
+    border-color: #28a745;
+}
+
+.block-header {
+    background-color: var(--navy-dark);
+    color: white;
+    padding: 12px 20px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.blockchain-block-card.genesis .block-header {
+    background-color: var(--gold);
+    color: var(--primary-blue);
+    font-weight: 700;
+}
+
+.blockchain-block-card.tampered .block-header {
+    background-color: #dc3545;
+}
+
+.blockchain-block-card.valid .block-header {
+    background-color: #28a745;
+}
+
+.block-body {
+    padding: 20px;
+    font-size: 0.85rem;
+}
+
+.hash-box {
+    background-color: #f1f3f5;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 4px;
+    word-break: break-all;
+    border: 1px solid #dee2e6;
+}
+
+.hash-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 2px;
+}
+
+.chain-link-connector {
+    text-align: center;
+    font-size: 2.2rem;
+    color: var(--gold);
+    margin: -10px 0 20px 0;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    animation: pulse 2s infinite;
+}
+
+/* --- KEYFRAME ANIMATIONS --- */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; color: var(--saffron); }
+    100% { transform: scale(1); opacity: 0.8; }
+}
+
+/* Booking Receipt Invoice View (for printing/PDF) */
+.receipt-container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: white;
+    padding: 50px;
+    border: 1px solid #dee2e6;
+    border-top: 8px solid var(--gold);
+    box-shadow: var(--shadow-premium);
+    position: relative;
+}
+
+.receipt-logo {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--primary-blue);
+    font-weight: 700;
+}
+
+.receipt-title {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.receipt-blockchain-badge {
+    border: 2px dashed #28a745;
+    color: #28a745;
+    padding: 10px 20px;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 5px;
+    display: inline-block;
+    background-color: rgba(40, 167, 69, 0.03);
+}
+
+.receipt-table th {
+    background-color: var(--navy-dark);
+    color: white;
+    font-weight: 500;
+}
+
+/* QR Code Modal Alignment */
+.qr-code-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #e9ecef;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin: 15px 0;
+}

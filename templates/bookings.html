@@ -1,0 +1,87 @@
+{% extends 'layout.html' %}
+
+{% block title %}Manage Bookings - Admin - Vedic Stay{% endblock %}
+
+{% block content %}
+<section class="section-padding bg-light">
+    <div class="container">
+        
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h2 class="text-primary-blue display-font"><i class="fa fa-tasks text-warning me-2"></i>Manage Bookings</h2>
+                <p class="text-muted">Review customer orders, approve pending stays, or trigger cancellations.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-dark"><i class="fa fa-arrow-left me-1"></i> Dashboard</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 12px;">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th scope="col" style="padding-left: 20px;">Booking UID</th>
+                                    <th scope="col">Customer</th>
+                                    <th scope="col">Hotel Name</th>
+                                    <th scope="col">Check-in / Out</th>
+                                    <th scope="col">Room &amp; Guests</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col" class="text-end" style="padding-right: 20px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if bookings %}
+                                    {% for booking in bookings %}
+                                    <tr>
+                                        <td style="padding-left: 20px;" class="font-monospace fw-bold small">{{ booking.booking_uid }}</td>
+                                        <td>{{ booking.customer_name }}</td>
+                                        <td>{{ booking.hotel_name }}<br><span class="text-muted small"><i class="fa fa-map-marker-alt"></i> {{ booking.city }}</span></td>
+                                        <td>
+                                            <span class="small d-block">In: {{ booking.checkin }}</span>
+                                            <span class="small d-block">Out: {{ booking.checkout }}</span>
+                                        </td>
+                                        <td>{{ booking.room_type }}<br><span class="text-muted small"><i class="fa fa-users"></i> {{ booking.guests }} Guest(s)</span></td>
+                                        <td class="fw-bold text-primary-blue">₹{{ booking.amount }}</td>
+                                        <td>
+                                            {% if booking.status == 'Confirmed' %}
+                                                <span class="badge bg-success">Confirmed</span>
+                                            {% elif booking.status == 'Cancelled' %}
+                                                <span class="badge bg-danger">Cancelled</span>
+                                            {% else %}
+                                                <span class="badge bg-warning text-dark">{{ booking.status }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-end" style="padding-right: 20px;">
+                                            {% if booking.status != 'Cancelled' %}
+                                                {% if booking.status == 'Pending' %}
+                                                    <a href="{{ url_for('approve_booking_route', booking_id=booking.id) }}" class="btn btn-success btn-sm me-1"><i class="fa fa-check"></i> Approve</a>
+                                                {% endif %}
+                                                <a href="{{ url_for('admin_cancel_booking_route', booking_id=booking.id) }}" class="btn btn-outline-danger btn-sm confirm-delete" data-message="Are you sure you want to cancel this booking?"><i class="fa fa-ban"></i> Cancel</a>
+                                            {% else %}
+                                                <button class="btn btn-secondary btn-sm" disabled><i class="fa fa-ban"></i> Cancelled</button>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="8" class="text-center p-5 text-muted">
+                                            <i class="fa fa-calendar-times fs-2 mb-3"></i>
+                                            <p class="mb-0">No booking records found in the database system.</p>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

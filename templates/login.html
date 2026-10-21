@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+{% block title %}Login - Vedic Stay{% endblock %}
+
+{% block content %}
+<section class="auth-bg">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-8">
+                <div class="glass-card">
+                    <div class="text-center mb-4">
+                        <i class="fa fa-sign-in-alt text-warning fs-1 mb-2"></i>
+                        <h2 class="text-primary-blue display-font">Welcome Back</h2>
+                        <p class="text-muted small">Login to manage your reservations and view your verified blockchain keys.</p>
+                    </div>
+                    
+                    <form action="{{ url_for('login') }}" method="POST">
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-semibold">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white"><i class="fa fa-envelope text-muted"></i></span>
+                                <input type="email" class="form-control border-start-0" id="email" name="email" placeholder="example@email.com" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="password" class="form-label fw-semibold">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white"><i class="fa fa-lock text-muted"></i></span>
+                                <input type="password" class="form-control border-start-0" id="password" name="password" placeholder="Enter password" required>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-gold w-100 py-3 mb-3"><i class="fa fa-sign-in-alt me-1"></i> Access Account</button>
+                        
+                        <div class="text-center mb-2">
+                            <span class="text-muted small">Don't have an account? <a href="{{ url_for('register') }}" class="text-primary fw-bold">Register here</a></span>
+                        </div>
+                        <div class="text-center border-top pt-3 mt-3">
+                            <span class="text-muted small">Are you an administrator? <a href="{{ url_for('admin_login') }}" class="text-warning fw-bold"><i class="fa fa-lock me-1"></i>Admin Portal</a></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
